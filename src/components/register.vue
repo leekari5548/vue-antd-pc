@@ -108,8 +108,7 @@
 
                 <a-col :span="18">
                   <pic-upload @sendAvatarUrl="getAvatarUrl"/>
-                  <a-input :value="avatar" hidden
-                           v-decorator="['avatar']"/>
+                  <a-input hidden :value="avatar"/>
                 </a-col>
               </a-row>
             </a-form-item>
@@ -139,7 +138,6 @@
               <a-row>
                 <a-col :span="12">
                   <a-input
-                      :value = "inputVerify"
                       v-decorator="[
               'picCaptcha',
               { rules: [{ required: true, message: '请输入验证码' },
@@ -181,8 +179,8 @@
 </template>
 <script>
 
-import PicUpload from "@/components/picUpload";
-const baseUrl = 'http://localhost:8080'
+import PicUpload from "./picUpload";
+import baseUrl from '../utils/baseUrl'
 import qs from 'qs'
 
 export default {
@@ -306,7 +304,8 @@ export default {
                 if (res.data.code === 0) {
                   this.$session.set('userinfo', data)
                   this.$message.info("登录成功")
-                  this.$router.push()
+                  this.$router.push('/')
+                  this.$router.go(0)
                 }
               })
             }else{

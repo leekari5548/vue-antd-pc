@@ -35,7 +35,7 @@ function getBase64(file) {
     }
   });
 }
-let baseUrl = 'http://localhost:8080'
+import baseUrl from '../utils/baseUrl'
 export default {
   name:'picUpload',
   data() {

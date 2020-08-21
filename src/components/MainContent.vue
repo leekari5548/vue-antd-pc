@@ -1,33 +1,39 @@
 <template>
   <div>
-  <div v-if="activate === ''">
     <a-layout-content style="margin: 0 16px">
       <br/>
-      <leekari-carousel/>
       <a-row>
         <a-col :span="5">
           <list/>
         </a-col>
-        <a-col :span="1">
-          <div style="background: aqua"></div>
-        </a-col>
         <a-col :span="18">
+          <leekari-carousel/>
+          <a-divider/><a-divider />
           <content-list/>
         </a-col>
       </a-row>
     </a-layout-content>
   </div>
-  <div v-if="activate === 'h-7'">
-    <register/>
-  </div>
-  </div>
+<!--  <leekari-carousel/>-->
+<!--  <a-row>-->
+<!--    <a-col :span="5">-->
+<!--      <list/>-->
+<!--    </a-col>-->
+<!--    <a-col :span="1">-->
+<!--      <div style="background: aqua"></div>-->
+<!--    </a-col>-->
+<!--    <a-col :span="18">-->
+<!--      <content-list/>-->
+<!--    </a-col>-->
+<!--  </a-row>-->
 </template>
 
 <script>
-import LeekariCarousel from "@/components/LeekariCarousel";
-import List from "@/components/list";
-import ContentList from "@/components/contentList";
-import Register from "@/components/register";
+import baseUrl from '../utils/baseUrl'
+import LeekariCarousel from "./LeekariCarousel";
+import List from "./list";
+import ContentList from "./contentList";
+import Register from "./register";
 export default {
   name: "MainContent",
   data(){

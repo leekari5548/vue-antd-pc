@@ -10,6 +10,7 @@
 </template>
 <script>
 import Vue from 'vue';
+import baseUrl from '../utils/baseUrl'
 export default {
   name:'list',
   data() {
@@ -19,7 +20,7 @@ export default {
   },
   methods:{
     initList(){
-      Vue.axios.post("http://localhost:8080/type/all").then(res => {
+      Vue.axios.post(`${baseUrl}/type/all`).then(res => {
         this.data = res.data.data.list
       })
     }

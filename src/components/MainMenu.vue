@@ -1,11 +1,9 @@
 <template>
   <a-layout-sider v-model="collapsed" collapsible>
     <div class="logo" style="background: rgb(3,22,39);width: 10%;height: 5%;margin-left:40% ">
-      <span style="font-family: Apple,serif;color: white;font-size: 20px">LEEKARI</span>
+      <span style="font-family: Apple,serif;color: white;font-size: 20px"><a @click.prevent="index" href="">LEEKARI</a></span>
     </div>
     <a-menu theme="dark"  mode="inline">
-
-
       <a-menu-item :key="item.menuKey" v-for="item in data">
         <a-icon :type="item.icon" />
         <span>{{item.menuName}}</span>
@@ -16,8 +14,7 @@
 </template>
 
 <script>
-const baseUrl = 'http://localhost:8080'
-import Vue from 'vue';
+import baseUrl from '../utils/baseUrl'
 export default {
   name: "MainMenu",
   data() {
@@ -28,10 +25,14 @@ export default {
   },
   methods:{
     initMenu(){
-      Vue.axios.post(`${baseUrl}/menu/list`).then(res => {
+      this.axios.post(`${baseUrl}/menu/list`).then(res => {
         this.data = res.data.data.list;
         // console.log(res)
       })
+    },
+    index(){
+      this.$router.push("/")
+      this.$router.go(0)
     }
   },
   beforeMount() {

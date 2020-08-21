@@ -3,19 +3,21 @@
     <main-menu/>
     <a-layout>
       <main-header @btn-change="getChange"/>
-      <main-content :changeBtn="active"/>
+<!--      <main-content :changeBtn="active"/>-->
+      <center-content/>
       <main-footer/>
       <a-back-top />
     </a-layout>
   </a-layout>
 </template>
 <script>
-import MainHeader from "@/components/MainHeader";
-import MainMenu from "@/components/MainMenu";
-import MainContent from "@/components/MainContent";
-import MainFooter from "@/components/MainFooter";
+import MainHeader from "./MainHeader";
+import MainMenu from "./MainMenu";
+import MainContent from "./MainContent";
+import MainFooter from "./MainFooter";
+import CenterContent from "./centerContent";
 export default {
-  components: {MainFooter, MainContent, MainMenu, MainHeader},
+  components: {CenterContent, MainFooter, MainContent, MainMenu, MainHeader},
   data() {
     return {
       collapsed: false,

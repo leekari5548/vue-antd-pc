@@ -39,7 +39,7 @@
               </a-menu-item>
               <a-menu-divider />
               <a-menu-item key="h-5">
-                <a @click="changeMethod('h-5')">
+                <a @click="exit">
                   退出
                 </a>
               </a-menu-item>
@@ -56,20 +56,17 @@
           :style="{ lineHeight: '64px' }"
       >
         <a-menu-item key="h-6">
-          <a @click="changeMethod('h-6')">
-            登录
-          </a>
+          <router-link to="/login" >登录</router-link>
         </a-menu-item>
         <a-menu-item key="h-7">
-          <a @click="changeMethod('h-7')">
-          注册
-          </a>
+          <router-link to="/register" >注册</router-link>
         </a-menu-item>
       </a-menu>
     </a-layout-header>
 </template>
 
 <script>
+import baseUrl from '../utils/baseUrl'
 export default {
   name: "MainHeader",
   data(){
@@ -81,14 +78,22 @@ export default {
   methods:{
     isLoginMethod(){
       let userinfo = this.$session.get('userinfo')
-      if (userinfo !== '') {
-        this.isLogin = false
-      }else
+      console.log(userinfo)
+      if (userinfo !== '' && userinfo !== undefined) {
         this.isLogin = true
+      }else
+        this.isLogin = false
     },
     changeMethod(btn){
         this.active = btn
       this.$emit('btn-change',btn)
+    },
+    exit(){
+      this.$session.set('userinfo','')
+      this.$session.set('token','')
+      this.$session.set('userId','')
+      // this.$router.push('/index')
+      this.$router.go(0)
     }
   },
   beforeMount() {

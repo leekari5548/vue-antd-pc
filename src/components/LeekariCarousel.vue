@@ -1,19 +1,25 @@
 <template>
-  <a-carousel  effect="fade" autoplay>
-    <div v-for="item in data" :key="item.id">
-      <img :src="item.imageUrl" width="100%" height="50%"/>
+  <div>
+  <a-spin tip="Loading..." v-if="show">
+    <div style="width:100%;height: 300px">
     </div>
-  </a-carousel>
+  </a-spin>
+    <a-carousel  effect="fade" autoplay v-if="!show">
+      <div v-for="item in data" :key="item.id">
+        <img :src="item.imageUrl" width="100%" height="50%"/>
+      </div>
+    </a-carousel>
+  </div>
 </template>
 <script>
-import Vue from 'vue'
 import qs from 'qs'
-const baseUrl = 'http://localhost:8080'
+import baseUrl from '../utils/baseUrl'
 export default {
   name: "LeekariCarousel",
   data(){
     return{
-      data:[]
+      data:[],
+      show:true
     }
   },
   methods:{
@@ -21,12 +27,16 @@ export default {
       let param = {
         type: 2
       }
-      Vue.axios.post(`${baseUrl}/carousel/list`,qs.stringify(param)).then(res => {
+      this.axios.post(`${baseUrl}/carousel/list`,qs.stringify(param)).then(res => {
         let list = res.data.data.list
-        for (let i = 0; i < list.length; i++) {
-          list[i].imageUrl = `${baseUrl}${list[i].imageUrl}`
-          this.data.push(list[i])
+        if (res.data.code === 0) {
+          for (let i = 0; i < list.length; i++) {
+            list[i].imageUrl = `${baseUrl}${list[i].imageUrl}`
+            this.data.push(list[i])
+          }
+          this.show = false
         }
+
       })
     }
   },
@@ -47,5 +57,10 @@ export default {
 
 .ant-carousel >>> .slick-slide h3 {
   color: #fff;
+}
+.spin-content {
+  border: 1px solid #91d5ff;
+  background-color: #e6f7ff;
+  padding: 30px;
 }
 </style>
