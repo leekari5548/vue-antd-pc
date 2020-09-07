@@ -1,26 +1,59 @@
 <template>
     <a-layout-header class="header">
-      <a-row v-if="isLogin">
-        <a-col :span="23">
-          <a-menu
-              style="margin-left: 95%"
-              theme="dark"
-              mode="horizontal"
-              :style="{ lineHeight: '64px' }"
-          >
-<!--            <a-menu-item  key="1">-->
-<!--              管理-->
-<!--            </a-menu-item>-->
-<!--            <a-menu-item key="2">-->
-<!--              信息-->
-<!--            </a-menu-item>-->
-          </a-menu>
+<!--      <a-space size="large">-->
+      <a-row>
+        <a-col :span="2">
+          <a @click="goIndex('/')" style="font-family: Apple,serif;color: #e6f7ff;float: left">LEEKARI</a>
         </a-col>
         <a-col :span="1">
-          <a-dropdown :trigger="['hover']">
+          <a @click="goIndex('/blog/list')" style="font-family: Apple,serif;color: #e6f7ff;float: left">博客</a>
+        </a-col>
+        <a-col :span="1">
+          <a @click="goIndex('/forum/index')" style="font-family: Apple,serif;color: #e6f7ff;float: left">论坛</a>
+        </a-col>
+        <a-col :span="1">
+          <a @click="goIndex('/question/index')" style="font-family: Apple,serif;color: #e6f7ff;float: left">问答</a>
+        </a-col>
+        <a-col :span="1">
+          <a @click="goIndex('/resource/index')" style="font-family: Apple,serif;color: #e6f7ff;float: left">下载</a>
+        </a-col>
+        <a-col :span="1">
+          <a @click="goIndex('/tools/index')" style="font-family: Apple,serif;color: #e6f7ff;float: left">工具</a>
+        </a-col>
+        <a-col v-if="showSuperAdminBtn" :span="1">
+          <a-dropdown style="float: right"  :trigger="['click']">
             <a class="ant-dropdown-link" @click="e => e.preventDefault()">
-              <span style="margin-left: 80%">
-                <a-badge :count="1"><a-avatar shape="square" src="http://localhost:8080/file/download/fe180f52cb9b4212ae067fc199d3e77f"/></a-badge>
+              <span style="font-family: Apple,serif;color: #e6f7ff;float: left">管理<a-icon type="down"/></span>
+            </a>
+            <a-menu slot="overlay">
+              <a-menu-item key="sourceManager">
+                <a @click="changeMethod('sourceManager')">资源管理</a>
+              </a-menu-item>
+              <a-menu-item key="menuManager">
+                <a @click="changeMethod('menuManager')">菜单管理</a>
+              </a-menu-item>
+              <a-menu-item key="userManager">
+                <a @click="changeMethod('userManager')">用户管理</a>
+              </a-menu-item>
+              <a-menu-item key="logManager">
+                <a @click="changeMethod('logManager')">日志管理</a>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </a-col>
+        <a-col v-if="!showSuperAdminBtn" :span="1">
+          &nbsp;
+        </a-col>
+        <a-col :span="14" v-show="!isLogin">&nbsp;</a-col>
+        <a-col :span="13" v-show="isLogin">&nbsp;</a-col>
+        <a-col :span="2" v-show="isLogin">
+          <span style="font-family: Apple,serif;color: #e6f7ff" v-if="isLogin">欢迎您，<b>{{username}}</b></span>
+        </a-col>
+        <a-col :span="1" v-show="isLogin">
+          <a-dropdown v-if="isLogin" style="float: right"  :trigger="['hover']">
+            <a class="ant-dropdown-link" @click="e => e.preventDefault()">
+              <span>
+                <a-badge :count="messageCount"><a-avatar shape="square" :src="avatar"/></a-badge>
               </span>
             </a>
             <a-menu slot="overlay">
@@ -34,10 +67,6 @@
                 <a @click="changeMethod('h-3')">站内通知</a>
               </a-menu-item>
               <a-menu-divider />
-              <a-menu-item key="h-4">
-                <a @click="changeMethod('h-4')">管理员入口</a>
-              </a-menu-item>
-              <a-menu-divider />
               <a-menu-item key="h-5">
                 <a @click="exit">
                   退出
@@ -45,23 +74,14 @@
               </a-menu-item>
             </a-menu>
           </a-dropdown>
-
+        </a-col>
+        <a-col :span="1" v-show="!isLogin">
+          <a @click="goIndex('/login')" style="font-family: Apple,serif;color: #e6f7ff;float: left">登录</a>
+        </a-col>
+        <a-col :span="1" v-show="!isLogin">
+          <a @click="goIndex('/register')" style="font-family: Apple,serif;color: #e6f7ff;float: left">注册</a>
         </a-col>
       </a-row>
-      <a-menu
-          v-if="!isLogin"
-          style="margin-left: 90%"
-          theme="dark"
-          mode="horizontal"
-          :style="{ lineHeight: '64px' }"
-      >
-        <a-menu-item key="h-6">
-          <router-link to="/login" >登录</router-link>
-        </a-menu-item>
-        <a-menu-item key="h-7">
-          <router-link to="/register" >注册</router-link>
-        </a-menu-item>
-      </a-menu>
     </a-layout-header>
 </template>
 
@@ -71,18 +91,30 @@ export default {
   name: "MainHeader",
   data(){
     return{
-        isLogin: false,
-        active: ''
+      messageCount:0,
+      username:'',
+      avatar:'http://localhost:8080/file/download/fe180f52cb9b4212ae067fc199d3e77f',
+      isLogin: false,
+      active: '',
+      showSuperAdminBtn:false,
     }
   },
   methods:{
     isLoginMethod(){
       let userinfo = this.$session.get('userinfo')
-      console.log(userinfo)
       if (userinfo !== '' && userinfo !== undefined) {
         this.isLogin = true
-      }else
+        let userinfo = this.$session.get('userinfo')
+        this.showSuperAdminBtn = userinfo.role === 509
+        this.avatar = `${baseUrl}${userinfo.picture}`
+        this.username = userinfo.nickname
+      }else{
         this.isLogin = false
+      }
+
+    },
+    goIndex(route){
+      this.$router.push(route)
     },
     changeMethod(btn){
         this.active = btn
@@ -92,22 +124,22 @@ export default {
       this.$session.set('userinfo','')
       this.$session.set('token','')
       this.$session.set('userId','')
-      // this.$router.push('/index')
       this.$router.go(0)
     }
   },
   beforeMount() {
+    // this.dateHandler()
     this.isLoginMethod()
   }
 }
 </script>
 
 <style scoped>
-    .header .logo {
-        width: 120px;
-        height: 30px;
-        background: rgba(0, 0, 0, 0.2);
-        margin-top: 10%;
-        float: left;
-    }
+    /*.header .logo {*/
+    /*    width: 120px;*/
+    /*    height: 30px;*/
+    /*    background: rgba(255, 255, 255, 0.2);*/
+    /*    margin-top: 10%;*/
+    /*    float: left;*/
+    /*}*/
 </style>

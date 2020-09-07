@@ -73,7 +73,7 @@
 
 <script>
 import baseUrl from "../utils/baseUrl";
-
+import qs from 'qs'
 export default {
   name:'login',
   data(){
@@ -104,18 +104,18 @@ export default {
             loginId: values.userName,
             password: values.password
           }
-          this.axios.post(`${baseUrl}/user/login`).then(res => {
+          this.axios.post(`${baseUrl}/user/login`,qs.stringify(param)).then(res => {
             let data = res.data.data
             if (res.data.code === 0) {
               this.$session.set('token', data.token)
               this.$session.set('userId', data.userId)
               this.$session.set('role', data.role)
-              this.$session.set('userinfo', data)
+              this.$session.set('userinfo', data.userinfo)
               this.$message.info("登录成功")
               this.$router.push('/')
               this.$router.go(0)
             }else{
-              this.$message.warn(res.data.message)
+              this.$message.warning(res.data.message)
             }
           })
           console.log('Received values of form: ', values);

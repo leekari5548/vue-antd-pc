@@ -1,92 +1,86 @@
 <template>
-  <a-list
-      class="demo-loadmore-list"
-      :loading="loading"
-      item-layout="horizontal"
-      :data-source="data"
-  >
-    <div
-        v-if="showLoadingMore"
-        slot="loadMore"
-        :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
+  <a-card>
+<!--    :loading="loading"-->
+    <a-list
+        class="demo-loadmore-list"
+        item-layout="horizontal"
+        :data-source="blogList"
     >
-      <a-spin v-if="loadingMore" />
-      <a-button type="primary"  v-else @click="onLoadMore">
-        more
-      </a-button>
-    </div>
-    <a-list-item slot="renderItem" slot-scope="item">
-      <a-list-item-meta
-          description="11111"
-      >
-        <a slot="title">{{ item.name.last }}</a>
-        <a-avatar
-            slot="avatar"
-            src="http://localhost:8080/file/download/fe180f52cb9b4212ae067fc199d3e77f"
-        />
-      </a-list-item-meta>
-
-      <template v-for="{ type, text } in actions" slot="actions">
-        <span :key="type">
-          <a-icon :type="type" style="margin-right: 8px" />
-          {{ text }}
+<!--      <div-->
+<!--          v-if="showLoadingMore"-->
+<!--          slot="loadMore"-->
+<!--          :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"-->
+<!--      >-->
+<!--        <a-spin v-if="loadingMore" />-->
+<!--        <a-button type="primary"  v-else @click="onLoadMore">-->
+<!--          more-->
+<!--        </a-button>-->
+<!--      </div>-->
+      <a-list-item slot="renderItem" slot-scope="item">
+        <a @click="skipTo(item.id)">
+        <a-list-item-meta
+            :description="item.title"
+        >
+          <a slot="title">{{ item.createUser }}</a>
+          <a-avatar
+              slot="avatar"
+              :src="item.createUserImageUrl"
+          />
+        </a-list-item-meta>
+        </a>
+        <template slot="actions">
+        <span key="star">
+          <a-icon type="star" style="margin-right: 8px" />
+          {{ item.stars }}
         </span>
-      </template>
-    </a-list-item>
-  </a-list>
+          <span key="like">
+          <a-icon type="like" style="margin-right: 8px" />
+          {{ item.likes }}
+        </span>
+          <span key="eye">
+          <a-icon type="eye" style="margin-right: 8px" />
+          {{ item.views }}
+        </span>
+        </template>
+      </a-list-item>
+    </a-list>
+  </a-card>
 </template>
 <script>
-import reqwest from 'reqwest';
-
-const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo';
+import baseUrl from "../utils/baseUrl";
+import * as qs from "qs";
 
 export default {
   data() {
     return {
-      loading: true,
-      loadingMore: false,
-      showLoadingMore: true,
-      data: [],
-      actions: [
-        { type: 'star-o', text: '156' },
-        { type: 'like-o', text: '156' },
-        { type: 'message', text: '2' },
-      ],
+      currentUser:'',
+      blogList:[]
     };
   },
-  mounted() {
-    this.getData(res => {
-      this.loading = false;
-      this.data = res.results;
-    });
-  },
   methods: {
-    getData(callback) {
-      reqwest({
-        url: fakeDataUrl,
-        type: 'json',
-        method: 'get',
-        contentType: 'application/json',
-        success: res => {
-          callback(res);
-        },
-      });
+    skipTo(id){
+      this.$router.push({name: 'blogDetail', query: {id: id}})
     },
-    onLoadMore() {
-      this.loadingMore = true;
-      this.getData(res => {
-        this.data = this.data.concat(res.results);
-        this.loadingMore = false;
-        this.$nextTick(() => {
-          window.dispatchEvent(new Event('resize'));
-        });
-      });
+    getBlogList(){
+      this.currentUser = this.$session.get('userId')
+      this.axios.post(`${baseUrl}/blog/most/popular`).then(res => {
+        if (res.data.code === 0) {
+          let list = res.data.data.list
+          for (let i = 0; i < list.length; i++) {
+            list[i].createUserImageUrl = `${baseUrl}${list[i].createUserImageUrl}`
+            this.blogList.push(list[i])
+          }
+          this.total = res.data.data.total
+        }else {
+          this.$message.warning(res.data.message)
+        }
+      })
     },
   },
+  beforeMount() {
+    this.getBlogList()
+  }
 };
 </script>
-<style>
-.demo-loadmore-list {
-  min-height: 350px;
-}
+<style scoped>
 </style>

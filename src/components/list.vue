@@ -1,12 +1,53 @@
 <template>
-  <a-list item-layout="horizontal" :data-source="data">
-    <a-list-item slot="renderItem" slot-scope="item">
-      <a-list-item-meta>
-        <a-avatar slot="avatar" src="http://39.96.204.153:19000/vue-source/1-2.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=litao%2F20200819%2F%2Fs3%2Faws4_request&X-Amz-Date=20200819T001439Z&X-Amz-Expires=432000&X-Amz-SignedHeaders=host&X-Amz-Signature=e319de5699d9104dd0af15959d6707b32a7f3f2a84695c5d1ac608042214e5c9"/>
-        <a slot="title">{{ item.typeName }}</a>
-      </a-list-item-meta>
-    </a-list-item>
-  </a-list>
+  <div>
+    <div style="margin: 5%">
+      <a-card title="分类列表">
+        <a-list item-layout="horizontal" :data-source="data">
+          <a-list-item slot="renderItem" slot-scope="item" align="center">
+            <a-list-item-meta>
+              <a slot="title">{{ item.typeName }}</a>
+            </a-list-item-meta>
+          </a-list-item>
+        </a-list>
+      </a-card>
+    </div>
+    <div style="margin: 5%">
+      <a-card title="小工具">
+        <a slot="extra" @click="skipToTools">更多</a>
+        <a-list item-layout="horizontal" :data-source="data">
+          <a-list-item slot="renderItem" slot-scope="item" align="center">
+            <a-list-item-meta>
+              <a slot="title">{{ item.typeName }}</a>
+            </a-list-item-meta>
+          </a-list-item>
+        </a-list>
+      </a-card>
+    </div>
+    <div style="margin: 5%">
+      <a-card title="热门资源">
+        <a slot="extra" @click="skipToResource">更多</a>
+        <a-list item-layout="horizontal" :data-source="data">
+          <a-list-item slot="renderItem" slot-scope="item" align="center">
+            <a-list-item-meta>
+              <a slot="title">{{ item.typeName }}</a>
+            </a-list-item-meta>
+          </a-list-item>
+        </a-list>
+      </a-card>
+    </div>
+    <div style="margin: 5%">
+      <a-card title="小游戏">
+        <a-list item-layout="horizontal" :data-source="data">
+          <a-list-item slot="renderItem" slot-scope="item" align="center">
+            <a-list-item-meta>
+              <a slot="title">{{ item.typeName }}</a>
+            </a-list-item-meta>
+          </a-list-item>
+        </a-list>
+      </a-card>
+    </div>
+  </div>
+
 </template>
 <script>
 import Vue from 'vue';
@@ -19,8 +60,14 @@ export default {
     };
   },
   methods:{
+    skipToResource(){
+      this.$router.push('/resource/index')
+    },
+    skipToTools(){
+      this.$router.push('/tools/index')
+    },
     initList(){
-      Vue.axios.post(`${baseUrl}/type/all`).then(res => {
+      Vue.axios.post(`${baseUrl}/blog/type/list`).then(res => {
         this.data = res.data.data.list
       })
     }

@@ -8,10 +8,15 @@ import 'ant-design-vue/dist/antd.css';
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueSession from 'vue-session'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import animated from 'animate.css'
 
+Vue.use(animated)
 Vue.use(VueSession)
 Vue.use(VueAxios, axios)
 Vue.use(Antd)
+Vue.use(ElementUI);
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

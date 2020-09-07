@@ -4,9 +4,9 @@
     <div style="width:100%;height: 300px">
     </div>
   </a-spin>
-    <a-carousel  effect="fade" autoplay v-if="!show">
+    <a-carousel effect="fade" autoplay v-if="!show">
       <div v-for="item in data" :key="item.id">
-        <img :src="item.imageUrl" width="100%" height="50%"/>
+        <img :src="item.imageUrl" style="object-fit: cover;width:100%;height: 300px"/>
       </div>
     </a-carousel>
   </div>
@@ -36,7 +36,6 @@ export default {
           }
           this.show = false
         }
-
       })
     }
   },

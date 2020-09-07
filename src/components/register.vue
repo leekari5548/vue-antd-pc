@@ -24,7 +24,13 @@
         ]"
               />
             </a-form-item>
-            <a-form-item v-bind="formItemLayout" label="密码" has-feedback>
+            <a-form-item v-bind="formItemLayout"  has-feedback>
+              <span slot="label">
+        密码&nbsp;
+        <a-tooltip title="最少包含一个大写字母，一个小写字母，一个数字，密码长度为8-16位">
+          <a-icon type="question-circle-o" />
+        </a-tooltip>
+      </span>
               <a-input-password
                   v-decorator="[
           'password',
@@ -66,7 +72,7 @@
             <a-form-item v-bind="formItemLayout">
       <span slot="label">
         昵称&nbsp;
-        <a-tooltip title="What do you want others to call you?">
+        <a-tooltip title="在系统中的昵称">
           <a-icon type="question-circle-o" />
         </a-tooltip>
       </span>
@@ -84,7 +90,9 @@
                   v-decorator="[
           'phone',
           {
-            rules: [{ required: true, message: '请输入手机号，只支持+86' }],
+            rules: [{ required: true, message: '请输入手机号，只支持+86' },{
+              validator: verifyPhoneNumber
+            }],
           },
         ]"
                   style="width: 100%"
@@ -226,6 +234,14 @@ export default {
     this.getPicVerify()
   },
   methods: {
+    verifyPhoneNumber(rule, value, callback){
+      const form = this.form;
+      let phone = form.getFieldValue('phone')
+      if(!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(phone))){
+        callback("手机号码有误，请重填")
+      }
+      callback();
+    },
     countDown() {
       let secondsToGo = 5;
       const modal = this.$success({
@@ -309,7 +325,7 @@ export default {
                 }
               })
             }else{
-              this.$message.warn('error')
+              this.$message.warn(res.data.message)
             }
           }).catch(() => {
             this.$message.warn('error')
@@ -324,6 +340,10 @@ export default {
     },
     compareToFirstPassword(rule, value, callback) {
       const form = this.form;
+      let pattern = /^.*(?=.{8,16})(?=.*\d)(?=.*[A-Z]+)(?=.*[a-z]+)(?=.*[!@#\$%\^&\*\?\(\),\.;:'"<>\{\}\[\]\\/\+-=\|_]).*$/;
+      if (!pattern.test(value)) {
+        callback("密码强度过低，请重新输入")
+      }
       if (value && value !== form.getFieldValue('password')) {
         callback('两次输入的密码不一致，请检查');
       } else {
@@ -332,37 +352,14 @@ export default {
     },
     validateToNextPassword(rule, value, callback) {
       const form = this.form;
-      if (!this.checkPassWord(value)) {
+      let pattern = /^.*(?=.{8,16})(?=.*\d)(?=.*[A-Z]+)(?=.*[a-z]+)(?=.*[!@#\$%\^&\*\?\(\),\.;:'"<>\{\}\[\]\\/\+-=\|_]).*$/
+      if (!pattern.test(value)) {
         callback("密码强度过低，请重新输入")
       }
       if (value && this.confirmDirty) {
         form.validateFields(['confirm'], {force: true});
       }
       callback();
-    },
-    checkPassWord() {
-      return true
-      // let arr = []
-      // if (value.length < 6) {//最初级别
-      //   return 0;
-      // }
-      // if (/\d/.test(value)) {//如果用户输入的密码 包含了数字
-      //   arr.push(1);
-      // }
-      // if (/[a-z]/.test(value)) {//如果用户输入的密码 包含了小写的a到z
-      //   arr.push(2);
-      // }
-      // if (/[A-Z]/.test(value)) {//如果用户输入的密码 包含了大写的A到Z
-      //   arr.push(3);
-      // }
-      // if (/\W/.test(value)) {//如果是非数字 字母 下划线
-      //   arr.push(4);
-      // }
-      // if (arr.length < 4){
-      //   return false
-      // }else {
-      //   return true
-      // }
     }
   },
 };

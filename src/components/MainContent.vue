@@ -8,24 +8,16 @@
         </a-col>
         <a-col :span="18">
           <leekari-carousel/>
-          <a-divider/><a-divider />
+          <a-divider/>
+          <a-card :bordered="false" title="本站公告">
+              {{'公告'}}
+          </a-card>
+          <br/>
           <content-list/>
         </a-col>
       </a-row>
     </a-layout-content>
   </div>
-<!--  <leekari-carousel/>-->
-<!--  <a-row>-->
-<!--    <a-col :span="5">-->
-<!--      <list/>-->
-<!--    </a-col>-->
-<!--    <a-col :span="1">-->
-<!--      <div style="background: aqua"></div>-->
-<!--    </a-col>-->
-<!--    <a-col :span="18">-->
-<!--      <content-list/>-->
-<!--    </a-col>-->
-<!--  </a-row>-->
 </template>
 
 <script>
