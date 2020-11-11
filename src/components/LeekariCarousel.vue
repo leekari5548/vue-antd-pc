@@ -34,6 +34,7 @@ export default {
             list[i].imageUrl = `${baseUrl}${list[i].imageUrl}`
             this.data.push(list[i])
           }
+          this.$session.set('carousel', this.data)
           this.show = false
         }
       })

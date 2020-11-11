@@ -13,6 +13,7 @@ import questionIndex from "../components/question/questionIndex";
 import newBlog from "../components/blog-module/newBlog";
 import blogDetail from "../components/blog-module/blogDetail";
 import toolsIndex from "../components/tools/toolsIndex";
+import ResourceManager from "../components/admin/ResourceManager";
 
 Vue.use(Router)
 
@@ -77,6 +78,11 @@ export default new Router({
       path: '/tools/index',
       name: 'toolsIndex',
       component: toolsIndex
+    },
+    {
+      path: '/resource/manage',
+      name: 'resourceManage',
+      component: ResourceManager
     },
   ]
 })

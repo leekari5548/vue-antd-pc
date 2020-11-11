@@ -27,13 +27,13 @@
             </a>
             <a-menu slot="overlay">
               <a-menu-item key="sourceManager">
-                <a @click="changeMethod('sourceManager')">资源管理</a>
+                <a @click="goIndex('/resource/manage')">资源管理</a>
               </a-menu-item>
               <a-menu-item key="menuManager">
-                <a @click="changeMethod('menuManager')">菜单管理</a>
+                <a @click="goIndex('menuManager')">菜单管理</a>
               </a-menu-item>
               <a-menu-item key="userManager">
-                <a @click="changeMethod('userManager')">用户管理</a>
+                <a @click="goIndex('userManager')">用户管理</a>
               </a-menu-item>
               <a-menu-item key="logManager">
                 <a @click="changeMethod('logManager')">日志管理</a>

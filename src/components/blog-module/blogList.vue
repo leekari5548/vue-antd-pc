@@ -26,7 +26,7 @@
                 <a-icon :theme="'twoTone'" @click="toEdit(item.id)" type="edit" />
                 </span>
                 <span v-if="currentUser === item.createUserId" key="delete">
-                <a-icon type="delete"  />
+                <a-icon type="delete" @click="deleteBlog(item.id)" />
                 </span>
               </template>
               <a-list-item-meta @click="skipTo(item.id)" :description="item.description">
@@ -76,6 +76,26 @@ export default {
     };
   },
   methods:{
+    deleteBlog(id){
+      if (id === '' || id === undefined) {
+        this.$message.error('系统错误')
+        return
+      }
+      let param = {
+        id: id
+      }
+      this.axios.post(`${baseUrl}/blog/delete`,qs.stringify(param)).then(res => {
+        if (res.data.code === 0) {
+          this.$message.success('删除成功')
+          this.getBlogList(this.search)
+        }else {
+          this.$message.warning('删除失败')
+        }
+      }).catch(e => {
+        console.log(e)
+        this.$message.error('系统错误')
+      })
+    },
     star(id){
       // this.clickTargetButton(1, id)
     },
